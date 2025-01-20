@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投稿を修正</title>
+    <!-- ブートストラップ -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 私たちのデザイン -->
+    <link rel="stylesheet" href="../../static/css/write.css" th:href="@{/css/write.css}">
+</head>
+
+<body>
+    <div class="container" th:replace="fragment/header(title='게시글 쓰기')"></div>
+
+    <!-- <div class="コンテナ">
+        <div class="ロゴ" >
+            <a href="../index.html" th:href="@{/}">
+                <img src="../../static/images/choper.png" th:src="@{/images/choper.png}" alt="">
+            </a>
+        </div>
+        <h2>게시글 쓰기</h2>
+    </div> --> <!-- 終わりのコンテナ  -->
+
+    <!-- 投稿書き込み画面 -->
+    <div class="content">
+        <form th:action="@{/board/boardUpdate}" method="POST" enctype="multipart/form-data">
+            <!-- 2種類のデータ（boardSeq、boardWriter：セキュリティが完成したら削除！） -->
+            <input type="hidden" name="boardSeq" th:value="${board.boardSeq}">
+            <input type="hidden" name="boardWriter" th:value="${board.boardWriter}">
+            <input type="hidden" name="searchItem" th:value="${searchItem}">
+            <input type="hidden" name="searchWord" th:value="${searchWord}">
+            <table>
+                <tr>
+                    <th>作者</th>
+                    <td>
+                        <span th:text="${board.boardWriter}"></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>タイトル</th>
+                    <td><input type="text" name="boardTitle" id="boardTitle" th:value="${board.boardTitle}"></td>
+                </tr>
+                <tr>
+                    <th>投稿内容</th>
+                    <td><textarea name="boardContent" id="boardContent">[[${board.boardContent}]]</textarea></td>
+                </tr>
+                <tr>
+                    <th>作成日</th>
+                    <td><span th:text="${#temporals.format(board.createDate, 'yyyy.MM.dd HH:mm')}"></span></td>
+                </tr>
+                <tr>
+                    <th>添付ファイル</th> <!-- 添付ファイル作成時に完成 -->
+                    <td>
+                        <th:block th:if="${board.originalFileName != null}">
+                            <span th:text="${board.originalFileName}" style="color: #14ef89;">
+                            </span><br>
+                        </th:block>
+                        <th:block th:unless="${board.originalFileName != null}">
+                            <span style="color: #100001;">添付ファイルなし</span><br>
+                        </th:block>
+                        <input type="file" name="uploadFile" id="uploadFile">
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="2">
+                        <input type="submit" value="投稿修正" class="btn btn-secondary">
+                        <input type="reset" value="キャンセル" class="btn btn-danger">
+                    </th>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+
+</html>
+
+<!-- 書き込みボタン -->

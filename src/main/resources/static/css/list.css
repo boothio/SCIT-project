@@ -1,0 +1,104 @@
+/* 
+*投稿リスト
+*/
+@charset "UTF-8";
+@import "main.css";
+
+
+/* 
+    페이지 전체 폭
+*/
+
+div.content {
+    width: 1000px;
+    margin: 30px auto;
+
+}
+
+/* 
+    投稿数、検索ボックス
+*/
+div.content>div.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+div.search {
+    width: 550px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: right;
+}
+
+div.search select {
+    width: 150px;
+    height: 32px;
+    border: 0px;
+    outline: 1px solid blue;
+    border-radius: 10px;
+}
+
+div.search input[type="text"] {
+    width: 300px;
+    height: 35px;
+}
+
+/* 
+    投稿リストテーブル
+*/
+
+.head {
+    margin-top: 20px;
+}
+
+.no,
+.writer,
+.hitcount {
+    width: 100px;
+}
+
+.create_date {
+    width: 180px;
+}
+
+/* 
+    書き込みボタン
+*/
+div.write {
+    width: 1000px;
+    margin: 20px, auto;
+    text-align: right;
+}
+
+/* 
+    ページネーション
+*/
+nav.pagination {
+    width: 1000px;
+    margin: 20px auto;
+    text-align: center;
+
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+nav.pagination .page-no {
+    display: inline-block;
+    width: 20px;
+    height: 30px;
+    padding: 0.4rem;
+    margin: 0 2px;
+}
+
+nav.pagination .current {
+    color: red;
+}
+
+nav.pagination .page-point {
+    font-size: 1.3rem;
+    height: 40px;
+}

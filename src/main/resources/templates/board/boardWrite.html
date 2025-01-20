@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投稿を書く</title>
+    <!-- ブートストラップ -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 私たちのデザイン -->
+    <link rel="stylesheet" href="../../static/css/write.css" th:href="@{/css/write.css}">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const uploadFileInput = document.getElementById('uploadFile');
+
+            uploadFileInput.addEventListener('change', function () {
+                const maxFileSize = 100 * 1024 * 1024; // 100MB（バイト単位）
+
+                const file = this.files[0];
+
+                if (file && file.size > maxFileSize) {
+                    alert('첨부파일은 100MB를 초과할 수 없습니다.');
+                    this.value = ''; // 入力をクリアする
+
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="container" th:replace="fragment/header(title='게시글 쓰기')"></div>
+    <!-- <div class="コンテナ">
+        <div class="ロゴ" >
+            <a href="../index.html" th:href="@{/}">
+                <img src="../../static/images/choper.png" th:src="@{/images/choper.png}" alt="">
+            </a>
+        </div>
+        <h2>投稿を書く</h2> -->
+    </div> <!-- 終わりのコンテナ  -->
+
+    <!-- 投稿書き込み画面 -->
+    <div class="content">
+        <form th:action="@{/board/boardWrite}" method="POST" enctype="multipart/form-data">
+            <table>
+                <tr>
+                    <th>作者</th>
+                    <td>
+                        <input type="text" name="boardWriter" th:value="${#authentication.name}" id="boardWriter"
+                            readonly>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>タイトル</th>
+                    <td><input type="text" name="boardTitle" id="boardTitle" placeholder="글제목을 입력하세요"></td>
+                </tr>
+                <tr>
+                    <th>投稿内容</th>
+                    <td><textarea name="boardContent" id="boardContent" placeholder="글제목을 입력하세요"></textarea></td>
+                </tr>
+                <tr>
+                    <th>添付ファイル</th> <!-- 添付ファイル作成時に完成 -->
+                    <td><input type="file" name="uploadFile" id="uploadFile"></td>
+                </tr>
+                <tr>
+                    <th colspan="2">
+                        <input type="submit" value="登録" class="btn btn-primary">
+                        <input type="reset" value="キャンセル" class="btn btn-danger">
+                    </th>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+
+</html>
+
+<!-- 書き込みボタン -->

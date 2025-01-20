@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://thymeleaf.org" xmlns:sec="http://thymeleaf.org/extras/spring-security">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+	<div class="container" th:fragment="top-menu(title)">
+		<div class="logo">
+			<a href="../index.html" th:href="@{/}"> <img src="../../static/images/choper.png"
+					th:src="@{/images/choper.png}" alt="">
+			</a>
+		</div>
+		<h2>[[${title}]]</h2>
+		<!-- 
+		<h2 th:text="${title}"></h2> -->
+	</div>
+
+	<!-- ログインしているか確認 -->
+	<div id="user">
+		<ul>
+
+			<th:block sec:authorize="isAnonymous()">
+				<li><a th:href="@{/user/login}">sign in</a></li>
+			</th:block>
+
+
+			<!-- 認証されたユーザー -->
+			<th:block sec:authorize="isAuthenticated()">
+				<li><a th:href="@{/user/logout}">[[${loginName}]]([[${#authentication.name}]])様、sign out</a></li>
+			</th:block>
+		</ul>
+	</div>
+</body>

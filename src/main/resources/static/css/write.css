@@ -1,0 +1,26 @@
+/* 
+*投稿リスト（共通部分）
+*/
+@charset "UTF-8";
+@import "main.css";
+
+
+/* 
+  投稿書き込み画面（テーブル）
+*/
+
+div.content td {
+    width: 800px;
+    text-align: left;
+}
+
+
+div.content td input[type="text"] {
+    width: 500px;
+
+}
+
+div.content td textarea {
+    width: 750px;
+    height: 200px;
+}

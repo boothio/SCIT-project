@@ -1,0 +1,57 @@
+/* 
+*投稿リスト（共通部分）
+*/
+@charset "UTF-8";
+@import "main.css";
+
+
+/* 
+   投稿詳細を見る
+*/
+
+div.content td {
+    width: 800px;
+    text-align: left;
+}
+
+
+pre {
+    width: 750px;
+    height: 150px;
+    font-size: 1rem;
+}
+
+/* 
+    コメント
+*/
+div.reply_write {
+    width: 1000px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 
+    コメント入力ウィンドウ
+*/
+input#replyContent {
+    width: 900px;
+    height: 35px;
+}
+
+/* 
+    コメント表現領域
+ */
+div#reply_list td.no,
+td.writer {
+    width: 100px;
+    text-align: center;
+}
+
+
+div#reply_list td.btns,
+td.date {
+    width: 180px;
+    text-align: center;
+}

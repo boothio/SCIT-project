@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>掲示板一覧</title>
+    <!-- ブートストラップ -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 素晴らしいフォント -->
+    <script src="https://kit.fontawesome.com/def97ee41b.js" crossorigin="anonymous"></script>
+    <!-- 私たちのデザイン -->
+    <link rel="stylesheet" href="../../static/css/list.css" th:href="@{/css/list.css}">
+    <!-- JQueryインポート -->
+    <script src="../../static/js/jquery-3.7.1.min.js" th:src="@{/js/jquery-3.7.1.min.js}"></script>
+    <script defer src="../../static/js/join.js" th:src="@{/js/paging.js}"></script>
+
+</head>
+
+<body>
+
+    <div class="container" th:replace="fragment/header(title='회원 전용 게시판')"></div>
+    <!-- ロゴ 
+    <div class="container">
+        <div class="logo">
+            <a href="../index.html" th:href="@{/}">
+                <img src="../../static/images/choper.png" th:src="@{/images/choper.png}" alt="">
+            </a>
+        </div>
+        <h2>会員専用掲示板</h2>
+    </div>
+-->
+    <!-- 投稿関連 -->
+    <div class="content">
+        <div class="top">
+            <!-- 全文数 -->
+            <div class="count">
+                <p>投稿数:[[${list.totalElements}]]数</p>
+            </div>
+            <!-- 検索バー -->
+            <div class="search">
+                <!-- http://~~~/ボード/ボードリスト?検索項目=ボードタイトル&検索ワード=이몽룡 -->
+                <form th:action="@{/board/boardList}" method="GET" id="searchForm">
+                    <input type="hidden" name="page" value="" id="requestPage">
+                    <select name="searchItem" id="searchItem">
+                        <option value="boardTitle" th:selected="${searchItem == 'boardTitle'}">タイトル</option>
+                        <option value="boardWriter" th:selected="${searchItem == 'boardWriter'}">作者</option>
+                        <option value="boardContent" th:selected="${searchItem == 'boardContent'}">投稿内容</option>
+                    </select>
+                    <input type="text" name="searchWord" th:value="${searchWord}">
+                    <input type="submit" value="검색" id="search" class="btn btn-primary">
+                </form>
+            </div> <!-- End.search -->
+        </div> <!-- 終了内容 -->
+
+        <!-- 実際の投稿が出力される部分 -->
+        <div class="head">
+            <th:block th:if="${list.isEmpty()==true}">
+                <p style="text-align: center">登録された投稿はありません。</p>
+            </th:block>
+            <th:block th:unless="${list.isEmpty()==true}">
+                <table>
+                    <tr>
+                        <th class="no">記事番号</th>
+                        <th class="title">タイトル</th>
+                        <th class="writer">作者</th>
+                        <th class="hitcount">ヒット</th>
+                        <th class="create_date">作成日
+                        </th>
+                    </tr>
+
+                    <!-- 投稿の繰り返し区間 -->
+                    <tr th:each="board, status : ${list}">
+                        <td th:text="${status.count + ((navi.page-1)*10)}">1</td>
+                        <td>
+                            <a th:href="@{/board/boardDetail(boardSeq=${board.boardSeq}, searchItem=${searchItem}, searchWord=${searchWord})}"
+                                th:text="${board.boardTitle}"></a>
+
+                            <th:block th:if="${board.originalFileName != null}">
+                                <img th:src="@{/images/clip.png}" alt="">
+                            </th:block>
+                            <th:block th:if="${board.replyCount != 0}">
+                                <span
+                                    style="color: darkred; font-weight: bold;">&#91;([[${board.replyCount}]])&#93;</span>
+                            </th:block>
+
+
+                        </td>
+                        <td th:text="${board.boardWriter}">安岡</td>
+                        <td th:text="${board.hitCount}">0</td>
+                        <td th:text="${#temporals.format(board.createDate, 'yyyy.MM.dd HH:mm')}"></td>
+                    </tr>
+                </table>
+            </th:block>
+        </div> <!-- エンドヘッド -->
+    </div> <!-- 終了内容 -->
+
+
+    <!-- 書き込みボタン -->
+    <div class="write">
+        <a th:href="@{/board/boardWrite}" class="btn btn-secondary">書く</a>
+    </div>
+    <!-- ページナビゲーション -->
+    <nav class="pagination">
+        <!-- フロントグループ -->
+        <th:block th:if="${navi.currentGroup} > 1">
+            <a th:href="|javascript:pageFormSubmit(${navi.startPageGroup}-1)|" class="page-no">
+                <i class="fa-solid fa-backward"></i></a>
+        </th:block>
+        <th:block th:unless="${navi.currentGroup} > 1">
+            <p class="page-no"><i class="fa-solid fa-backward"></i></p>
+        </th:block>
+        <!-- フロントページ -->
+        <th:block th:if="${navi.page} > 1">
+            <a th:href="|javascript:pageFormSubmit(${navi.page}-1)|" class="page-no">
+                <i class="fa-solid fa-caret-left"></i></a>
+        </th:block>
+        <th:block th:unless="${navi.page} > 1">
+            <p class="page-no"><i class="fa-solid fa-caret-left"></i></p>
+        </th:block>
+        <!-- ページ繰り返し区間 -->
+        <span th:each="count :${#numbers.sequence(navi.startPageGroup, navi.endPageGroup)}">
+            <th:block th:if="${navi.page != count}">
+                <!-- ||に包まれば、JavaScript文法とタイムリーフ文法の両方が適用されたと認識する -->
+                <a th:href="|javascript:pageFormSubmit(${count})|" th:text="${count}" class="page-no"></a>&nbsp;
+            </th:block>
+            <!-- リクエストされたページ -->
+            <th:block th:if="${navi.page == count}">
+                <span th:text="${count}" class="page-no current">
+                </span>&nbsp;
+            </th:block>
+        </span>
+        <!-- 裏ページ -->
+        <th:block th:if="${navi.page} < ${navi.totalPages}">
+            <a th:href="|javascript:pageFormSubmit(${navi.page} + 1)|" class="page-no">
+                <i class="fa-solid fa-caret-right"></i></a>
+        </th:block>
+        <th:block th:unless="${navi.page} < ${navi.totalPages}">
+            <p class="page-no"><i class="fa-solid fa-caret-right"></i></p>
+        </th:block>
+
+        <!-- リアグループ -->
+        <th:block th:if="${navi.currentGroup} < ${navi.totalGroupCount}">
+            <a th:href="|javascript:pageFormSubmit(${navi.endPageGroup} + 1)|" class="page-no">
+                <i class="fa-solid fa-forward"></i></a>
+        </th:block>
+        <th:block th:if="${navi.currentGroup} >= ${navi.totalGroupCount}">
+            <p class="page-no"><i class="fa-solid fa-forward"></i></p>
+        </th:block>
+    </nav>
+
+</body>
+
+</html>
